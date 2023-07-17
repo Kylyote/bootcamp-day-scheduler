@@ -5,6 +5,8 @@ Project to dynamically update HTML with CCS powered by jQuery and the Day.js API
 ## Sources
 
 - https://day.js.org/docs - useful for figuring out what day.js wants and what is returns
+- https://www.w3schools.com/jsref/jsref_split.asp - helped with removing the first part of the ID. Feels really messy to make the "hour-" the dividing character
+- Phind.com - asked it question on how to slow down how often a loop is called. Gave me code back using the "setTimeout" global function.
 
 ## User Story
 
