@@ -23,22 +23,74 @@ $(function () {
   // function? How can DOM traversal be used to get the "hour-x" id of the
   // time-block containing the button that was clicked? How might the id be
   // useful when saving the description in local storage?
-  //containerBtn.addEventListener
-  // containerBtn2.addEventListener("click", function(event){
-  //   var elememt = event.target;
-  //   console.log(element);
-  // });
-  // TODO: Add code to apply the past, present, or future class to each time
-  // block by comparing the id to the current hour. HINTS: How can the id
-  // attribute of each time-block be used to conditionally add or remove the
-  // past, present, and future classes? How can Day.js be used to get the
-  // current hour in 24-hour time?
-  // Use jQuery to move up and down stack with .parent()
-  //
+  // "this" refers to the 
+  function saveNote(){
+    let note = this.parentNode.id;
+    let notation = this.previousElementSibling.value;
+    console.log(note);
+    console.log(notation);
+    localStorage.setItem(note, notation);
+  }
+  // Attaches each() function to each item with .saveBtn so it is looped through. .on adds event listener since addEventListener doesn't work that well with jQuery. 
+  $('.saveBtn').each(function(){
+    $(this).on("click", saveNote)
+  })
+
+    // TODO: Add code to apply the past, present, or future class to each time
+    // block by comparing the id to the current hour. HINTS: How can the id
+    // attribute of each time-block be used to conditionally add or remove the
+    // past, present, and future classes? How can Day.js be used to get the
+    // current hour in 24-hour time?
+
+    // Use jQuery to move up and down stack with .parent()
+    // Add check to tell what hour it is an change block colors
+    function checkTime(){
+      // Create variable that will store the current hour. Day.js returns string so need to parse to int. Will make number manipulation easier if it is ever required. To make back a string use <variable>.toString(). Putting number inside () changes the base. 
+      let currentHour = parseInt(dayjs().format('HH'));
+      // variable to test
+      //let currentHour = 10;
+
+      // write code to call the rows that need to have color changed, .each() created a loop in jQuery that goes over each object with that specified class/id.
+      $('.time-block').each(function() {
+        // creates variable with a single number. $(this) returns object that was previously called by jQuery (.time-block in this case), .attr() returns named attribute in the object, split() cuts the attribute into an array with the spaces being whatever is in the (). [1] returns the 2nd item in the array.
+        let rowHour = parseInt($(this).attr('id').split('hour-')[1]);
+        // if else statement to change color of row based on the ID. Changes items in the DOM because of $
+        if (rowHour < currentHour){
+          $(this).addClass('past');
+          $(this).removeClass('present');
+          $(this).removeClass('future');
+        } else if (rowHour === currentHour){
+          $(this).removeClass('past');
+          $(this).addClass('present');
+          $(this).removeClass('future');
+        } else {
+          $(this).removeClass('past');
+          $(this).removeClass('present');
+          $(this).addClass('future');
+        }
+        console.log(this);
+        console.log("Day.js number:")
+        console.log(currentHour);
+        console.log("Object ID hour number")
+        console.log(rowHour);
+      })
+    };
+    //
   // TODO: Add code to get any user input that was saved in localStorage and set
   // the values of the corresponding textarea elements. HINT: How can the id
   // attribute of each time-block be used to do this?
-  //
+  
+  // Can hard code for each saved code
+  $("#hour-9 .description").val(localStorage.getItem("hour-9"));
+
+  // But what if I can make some sort of loop?
+  for (let i = 9; i < 18; i++){
+    let saveLocation = "hour" + i;
+    let saveId = "#" + saveLocation + " .description";
+    $(saveId).val(localStorage.getItem(saveLocation));
+  }
+  
+  // Functions that try to check the time to change block colors so page does not have to be refreshed. Single threaded nature of JavaScript is hindering how often the save button can function. Is there a work around? 
   
   // function checkTime(){
   //   let secondCheck = dayjs().format('ss');
@@ -59,25 +111,8 @@ $(function () {
   //     setTimeout(checkTime2, 1000);
   //   }
   // }
-  // checkTime();
+   checkTime();
+   console.log("checkTime ran");
   // checkTime2();
 });
 
-function saveNote(){
-  let note = this.parentNode.id;
-  let notation = this.previousElementSibling.value;
-  console.log(note);
-  console.log(notation);
-  localStorage.setItem(note, notation);
-}
-
-$('.saveBtn').each(function(){
-  $(this).on("click", saveNote)
-})
-
-$("#hour-9 .description").val(localStorage.getItem("hour-9"));
-for (let i = 9; i < 18; i++){
-  let saveLocation = "hour" + i;
-  let saveId = "#" + saveLocation + " .description";
-  $(saveId).val(localStorage.getItem(saveLocation));
-}
